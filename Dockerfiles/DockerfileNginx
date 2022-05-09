@@ -1,0 +1,6 @@
+FROM nginx:alpine AS front
+WORKDIR /etc/nginx/conf.d
+COPY ./Config/nginx/conf.d/default.conf /etc/nginx/conf.d
+WORKDIR /usr/src/app
+COPY ./App .
+CMD ["nginx", "-g", "daemon off;"]

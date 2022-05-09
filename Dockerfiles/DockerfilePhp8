@@ -1,0 +1,59 @@
+FROM php:8.1-fpm AS back
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    locales \
+    zip \
+    jpegoptim \
+    optipng \
+    pngquant \
+    gifsicle \
+    vim \
+    libzip-dev \
+    unzip \
+    git \
+    libonig-dev \
+    curl
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd
+
+RUN pecl install redis
+RUN docker-php-ext-enable redis
+
+RUN apt-get install -y vim \
+    && curl -L -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-8.phar \
+    && chmod -R +x /usr/local/bin/
+
+#ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+#RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
+#    install-php-extensions http
+
+RUN echo 'memory_limit = -1' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
+RUN echo "max_execution_time=900" >> /usr/local/etc/php/conf.d/docker-php-ext-max-execution-time.ini
+COPY ./Config/php/local.ini /usr/local/etc/php/conf.d
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+RUN apt-get autoremove -y \
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+WORKDIR /usr/src/app
+
+COPY ./App .
+
+RUN composer i -o
+
+RUN cp .env.example .env
+RUN php artisan key:generate
+
+USER root
+EXPOSE 9000
+CMD ["php-fpm"]
