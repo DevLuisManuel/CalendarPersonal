@@ -19,9 +19,8 @@ class ScheduleController extends BaseController
      */
     public function listAppointments()
     {
-        $calendar = Calendar::all();
         return $this->response(
-            data: AppointmentResource::collection($calendar)->jsonSerialize(),
+            data: AppointmentResource::collection(Calendar::all())->jsonSerialize(),
             message: "List Calendar",
         );
     }
