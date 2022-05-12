@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\BaseController;
+use App\Http\Resources\AppointmentResource;
 use App\Models\Calendar;
 use App\Models\User;
 use Carbon\Carbon;
@@ -13,7 +14,23 @@ use Illuminate\Http\{JsonResponse, Request};
 
 class ScheduleController extends BaseController
 {
-    public function appointment(Request $request)
+    /**
+     * @return JsonResponse
+     */
+    public function listAppointments()
+    {
+        $calendar = Calendar::all();
+        return $this->response(
+            data: AppointmentResource::collection($calendar)->jsonSerialize(),
+            message: "List Calendar",
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createAppointment(Request $request)
     {
         //Call Function Validator
         $valid = $this->validations($request);
@@ -37,29 +54,24 @@ class ScheduleController extends BaseController
 
         $calendar = new Calendar();
         $calendar->setAttribute('appointmentDate', $request->get('appointmentDate'));
-        $calendar->users()->associate($person);
+        $calendar->user()->associate($person);
         $calendar->save();
 
         return $this->response(
-            data: $calendar->toArray(),
+            data: (new AppointmentResource($calendar))->jsonSerialize(),
             message: "Successfully Assigned Dance Date.",
         );
     }
 
-    public function listAppointments()
-    {
-        $calendar = Calendar::query()->get();
-        return $this->response(
-            data: $calendar->toArray(),
-            message: "List Calendar",
-        );
-    }
-
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
     public function readAppointment(int $id)
     {
         $calendar = Calendar::query()->find($id);
         return ($calendar) ? $this->response(
-            data: $calendar->toArray(),
+            data: (new AppointmentResource($calendar))->jsonSerialize(),
             message: "appointment success",
         ) : $this->response(
             data: [],
@@ -68,6 +80,11 @@ class ScheduleController extends BaseController
         );
     }
 
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
     public function updateAppointment(Request $request, int $id)
     {
         $calendar = Calendar::query()->find($id);
@@ -86,7 +103,7 @@ class ScheduleController extends BaseController
             $calendar->setAttribute('appointmentDate', $request->get('appointmentDate'));
             $calendar->save();
             return $this->response(
-                data: $calendar->toArray(),
+                data: (new AppointmentResource($calendar))->jsonSerialize(),
                 message: "appointment Update",
             );
         }
@@ -97,13 +114,17 @@ class ScheduleController extends BaseController
         );
     }
 
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
     public function deleteAppointment($id)
     {
         $calendar = Calendar::query()->find($id);
         if ($calendar) {
             $calendar->delete();
             return $this->response(
-                data: $calendar->toArray(),
+                data: [],
                 message: "appointment Delete Successfull",
             );
         }
