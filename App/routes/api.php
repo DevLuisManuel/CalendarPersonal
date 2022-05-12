@@ -1,19 +1,16 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\{ScheduleController, VerifyController};
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::controller(ScheduleController::class)->prefix('Schedule')->group(function () {
+    Route::get('/', 'listAppointments')->name('Schedule.listAppointments'); // List Calendar
+    Route::post('Appointment', 'createAppointment')->name('Schedule.Appointment'); //Create
+    Route::get('Appointment/{id}', 'readAppointment')->name('Schedule.readAppointment'); // Read
+    Route::put('Appointment/{id}', 'updateAppointment')->name('Schedule.updateAppointment'); // Update
+    Route::delete('Appointment/{id}', 'deleteAppointment')->name('Schedule.deleteAppointment'); // Delete
+});
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::controller(VerifyController::class)->prefix('Verify')->group(function () {
+    Route::get('/User', 'verifyUser')->name('verify-user');
 });
