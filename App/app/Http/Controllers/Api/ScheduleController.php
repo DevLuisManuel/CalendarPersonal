@@ -21,7 +21,7 @@ class ScheduleController extends BaseController
     {
         return $this->response(
             data: AppointmentResource::collection(Calendar::all())->jsonSerialize(),
-            message: "List Calendar",
+            message: __('Schedule/Appointment.listAppointment'),
         );
     }
 
@@ -58,7 +58,7 @@ class ScheduleController extends BaseController
 
         return $this->response(
             data: (new AppointmentResource($calendar))->jsonSerialize(),
-            message: "Successfully Assigned Dance Date.",
+            message: __('Schedule/Appointment.appointmentAssigned'),
         );
     }
 
@@ -71,10 +71,10 @@ class ScheduleController extends BaseController
         $calendar = Calendar::query()->find($id);
         return ($calendar) ? $this->response(
             data: (new AppointmentResource($calendar))->jsonSerialize(),
-            message: "appointment success",
+            message: __('Schedule/Appointment.success.read'),
         ) : $this->response(
             data: [],
-            message: "appointment False",
+            message: __('Schedule/Appointment.errors.notExistappointment'),
             success: false
         );
     }
@@ -103,12 +103,12 @@ class ScheduleController extends BaseController
             $calendar->save();
             return $this->response(
                 data: (new AppointmentResource($calendar))->jsonSerialize(),
-                message: "appointment Update",
+                message: __('Schedule/Appointment.success.update'),
             );
         }
         return $this->response(
             data: [],
-            message: "appointment Not exists",
+            message: __('Schedule/Appointment.errors.notExistappointment'),
             success: false
         );
     }
@@ -124,13 +124,12 @@ class ScheduleController extends BaseController
             $calendar->delete();
             return $this->response(
                 data: [],
-                message: "appointment Delete Successfull",
+                message: __('Schedule/Appointment.success.delete'),
             );
         }
-
         return $this->response(
             data: [],
-            message: "appointment Not exists",
+            message: __('Schedule/Appointment.errors.notExistappointment'),
             success: false
         );
     }
@@ -149,14 +148,16 @@ class ScheduleController extends BaseController
                 "person.id" => "required_if:exist,true",
                 "person.name" => "required_if:exist,false",
                 "person.email" => "email|required_if:exist,false",
-            ] //Rules
+            ], //Rules
+            [],
+            __('Schedule/Attributes.attributes')
         );
         //We start the validation
         if ($validator->fails()) {
             return [
                 "data" => [],
                 "errors" => $validator->messages()->toArray(),
-                "message" => "Error de validacion",
+                "message" => __('Schedule/Appointment.errors.validation'),
                 "success" => false
             ];
         }
@@ -171,7 +172,7 @@ class ScheduleController extends BaseController
             return [
                 "data" => [],
                 "errors" => [],
-                "message" => "This date cannot be scheduled, it's out range of work hours.",
+                "message" => __('Schedule/Appointment.errors.workDay'),
                 "success" => false,
             ];
         }
@@ -188,7 +189,7 @@ class ScheduleController extends BaseController
             return [
                 "data" => [],
                 "errors" => [],
-                "message" => "This date cannot be scheduled, it is already being used.",
+                "message" => __('Schedule/Appointment.errors.appointmentDate'),
                 "success" => false,
             ];
         }

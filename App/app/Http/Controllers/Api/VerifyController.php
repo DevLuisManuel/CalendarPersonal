@@ -20,14 +20,14 @@ class VerifyController extends BaseController
             return [
                 "data" => [],
                 "errors" => $validator->messages()->toArray(),
-                "message" => "Error de validacion",
+                "message" => __('User/User.errors.validation'),
                 "success" => false
             ];
         }
 
         return $this->response(
             data: (new UserResource(User::query()->where("email", $request->get('email'))->first()))->jsonSerialize(),
-            message: "User Found Successfull"
+            message: __('User/User.success.userFound')
         );
     }
 }
