@@ -13,7 +13,7 @@ class VerifyController extends BaseController
     public function verifyUser(Request $request)
     {
         $validator = Validator::make($request->only('email'), [
-            'email' => 'required|email'
+            'email' => 'required|email|exists:user,email'
         ]);
 
         if ($validator->fails()) {
