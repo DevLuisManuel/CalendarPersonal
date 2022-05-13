@@ -23,6 +23,7 @@ services:
       DB_PORT: "${MYSQL_PORT}"
       PROJECT_NAME: "${PROJECT_NAME}"
       DB_PASSWORD: "${MYSQL_PASSWORD}"
+      DB_USERNAME: root
       DB_HOST: mysql
       DB_DATABASE: "${MYSQL_DATABASE}"
     networks:
