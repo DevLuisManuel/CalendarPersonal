@@ -20,7 +20,7 @@ class ScheduleController extends BaseController
     public function listAppointments()
     {
         return $this->response(
-            data: AppointmentResource::collection(Calendar::query()->orderBy('appointmentDate', 'desc')->get())->jsonSerialize(),
+            data: AppointmentResource::collection(Calendar::query()->orderBy('appointmentDate')->get())->jsonSerialize(),
             message: __('Schedule/Appointment.listAppointment'),
         );
     }
