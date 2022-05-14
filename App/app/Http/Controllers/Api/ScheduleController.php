@@ -33,12 +33,12 @@ class ScheduleController extends BaseController
     {
         //Call Function Validator
         $valid = $this->validations($request);
-        if (!$valid['success']) {
+        if (!$valid['Success']) {
             return $this->response(
-                data: $valid['data'],
-                message: $valid['message'],
-                errors: $valid['errors'],
-                success: $valid['success']
+                data: $valid['Data'],
+                message: $valid['Message'],
+                errors: $valid['Errors'],
+                success: $valid['Success']
             );
         }
 
@@ -90,12 +90,12 @@ class ScheduleController extends BaseController
         if ($calendar) {
             //Call Function Validator
             $valid = $this->validations($request);
-            if (!$valid['success']) {
+            if (!$valid['Success']) {
                 return $this->response(
-                    data: $valid['data'],
-                    message: $valid['message'],
-                    errors: $valid['errors'],
-                    success: $valid['success']
+                    data: $valid['Data'],
+                    message: $valid['Message'],
+                    errors: $valid['Errors'],
+                    success: $valid['Success']
                 );
             }
 
