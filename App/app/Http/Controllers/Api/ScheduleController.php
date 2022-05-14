@@ -20,7 +20,7 @@ class ScheduleController extends BaseController
     public function listAppointments()
     {
         return $this->response(
-            data: AppointmentResource::collection(Calendar::all())->jsonSerialize(),
+            data: AppointmentResource::collection(Calendar::query()->orderBy('appointmentDate', 'desc')->get())->jsonSerialize(),
             message: __('Schedule/Appointment.listAppointment'),
         );
     }
@@ -142,7 +142,7 @@ class ScheduleController extends BaseController
     {
         $validator = Validator::make($request->all(),
             [
-                "appointmentDate" => "required|date_format:Y-m-d H:i|after_or_equal:" . Carbon::now()->format('Y-m-d H:i'),
+                "appointmentDate" => "required|date_format:Y-m-d H:i:s|after_or_equal:" . Carbon::now()->format('Y-m-d H:i:00'),
                 "exist" => "required|boolean",
                 "person" => "array|array",
                 "person.id" => "required_if:exist,true",
