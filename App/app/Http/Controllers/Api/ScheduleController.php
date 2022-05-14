@@ -142,7 +142,7 @@ class ScheduleController extends BaseController
     {
         $validator = Validator::make($request->all(),
             [
-                "appointmentDate" => "required|date_format:Y-m-d H:i:s|after_or_equal:" . Carbon::now()->format('Y-m-d H:i:00'),
+                "appointmentDate" => "required|date_format:Y-m-d H:i:s|after_or_equal:" . Carbon::now()->format('Y-m-d H:i:s'),
                 "exist" => "required|boolean",
                 "person" => "array|array",
                 "person.id" => "required_if:exist,true",
@@ -161,14 +161,11 @@ class ScheduleController extends BaseController
                 "Success" => false
             ];
         }
-        $checkHoursWork = (new Carbon($request->get('appointmentDate')))
-            ->between(
-                Carbon::createFromFormat('H:i a', config('Work.hours')[0]),
-                Carbon::createFromFormat('H:i a', config('Work.hours')[1])
-            );
+        $work = new Carbon($request->get('appointmentDate'));
+
         //Validate Work Hour
         if (!(new Collection(config('Work.days')))->contains((new Carbon($request->get('appointmentDate')))->format('l'))
-            || !$checkHoursWork) {
+            || (($work->format("H:i") < config("Work.hours")[0]) || ($work->format("H:i") >= config("Work.hours")[1]))) {
             return [
                 "Data" => [],
                 "Errors" => [
