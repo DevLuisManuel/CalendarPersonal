@@ -168,7 +168,7 @@ class ScheduleController extends BaseController
             );
         //Validate Work Hour
         if (!(new Collection(config('Work.days')))->contains((new Carbon($request->get('appointmentDate')))->format('l'))
-            && !$checkHoursWork) {
+            || !$checkHoursWork) {
             return [
                 "Data" => [],
                 "Errors" => [
