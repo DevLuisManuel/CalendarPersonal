@@ -18,10 +18,10 @@ class VerifyController extends BaseController
 
         if ($validator->fails()) {
             return [
-                "data" => [],
-                "errors" => $validator->messages()->toArray(),
-                "message" => __('User/User.errors.validation'),
-                "success" => false
+                "Data" => [],
+                "Errors" => $validator->messages()->toArray(),
+                "Message" => __('User/User.errors.validation'),
+                "Success" => false
             ];
         }
 

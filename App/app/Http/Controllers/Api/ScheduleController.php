@@ -155,10 +155,10 @@ class ScheduleController extends BaseController
         //We start the validation
         if ($validator->fails()) {
             return [
-                "data" => [],
-                "errors" => $validator->messages()->toArray(),
-                "message" => __('Schedule/Appointment.errors.validation'),
-                "success" => false
+                "Data" => [],
+                "Errors" => $validator->messages()->toArray(),
+                "Message" => __('Schedule/Appointment.errors.validation'),
+                "Success" => false
             ];
         }
         $checkHoursWork = (new Carbon($request->get('appointmentDate')))
@@ -170,10 +170,10 @@ class ScheduleController extends BaseController
         if (!(new Collection(config('Work.days')))->contains((new Carbon($request->get('appointmentDate')))->format('l'))
             && !$checkHoursWork) {
             return [
-                "data" => [],
-                "errors" => [],
-                "message" => __('Schedule/Appointment.errors.workDay'),
-                "success" => false,
+                "Data" => [],
+                "Errors" => [],
+                "Message" => __('Schedule/Appointment.errors.workDay'),
+                "Success" => false,
             ];
         }
 
@@ -187,12 +187,12 @@ class ScheduleController extends BaseController
             ->get();
         if ($calendar->count() > 0) {
             return [
-                "data" => [],
-                "errors" => [],
-                "message" => __('Schedule/Appointment.errors.appointmentDate'),
-                "success" => false,
+                "Data" => [],
+                "Errors" => [],
+                "Message" => __('Schedule/Appointment.errors.appointmentDate'),
+                "Success" => false,
             ];
         }
-        return ["success" => true];
+        return ["Success" => true];
     }
 }
