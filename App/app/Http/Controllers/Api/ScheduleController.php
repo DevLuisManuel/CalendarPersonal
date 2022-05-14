@@ -156,7 +156,7 @@ class ScheduleController extends BaseController
         if ($validator->fails()) {
             return [
                 "Data" => [],
-                "Errors" => $validator->messages()->toArray(),
+                "Errors" => $validator->errors()->all(),
                 "Message" => __('Schedule/Appointment.errors.validation'),
                 "Success" => false
             ];
@@ -171,7 +171,9 @@ class ScheduleController extends BaseController
             && !$checkHoursWork) {
             return [
                 "Data" => [],
-                "Errors" => [],
+                "Errors" => [
+                    __('Schedule/Appointment.errors.workDay')
+                ],
                 "Message" => __('Schedule/Appointment.errors.workDay'),
                 "Success" => false,
             ];
@@ -188,7 +190,9 @@ class ScheduleController extends BaseController
         if ($calendar->count() > 0) {
             return [
                 "Data" => [],
-                "Errors" => [],
+                "Errors" => [
+                    __('Schedule/Appointment.errors.workDay')
+                ],
                 "Message" => __('Schedule/Appointment.errors.appointmentDate'),
                 "Success" => false,
             ];
