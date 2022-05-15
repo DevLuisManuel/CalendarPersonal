@@ -56,6 +56,29 @@ services:
     networks:
       - network-asimov
       - proxy_reverse-proxy
+  nginx_node:
+    build:
+      context: .
+      dockerfile: Dockerfiles/DockerfileNode
+    env_file:
+      - .env
+    container_name: "${PROJECT_NAME}_app_node_nginx"
+    restart: on-failure
+    working_dir: /usr/src/app
+    depends_on:
+      - app
+    expose:
+      - "${NGINX_PORT_EXPOSE_NODE}"
+    ports:
+      - "${NGINX_PORT_EXPOSE_NODE}:80"
+    environment:
+      NGINX_HOST: "${NGINX_URL_NODE}"
+      VIRTUAL_HOST: "${NGINX_URL_NODE}"
+      LETSENCRYPT_HOST: "${NGINX_URL_NODE}"
+      LETSENCRYPT_EMAIL: "${LETSENCRYPT_EMAIL}"
+    networks:
+      - network-asimov
+      - proxy_reverse-proxy
 networks:
   network-asimov:
     driver: bridge
