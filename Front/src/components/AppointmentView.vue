@@ -88,7 +88,7 @@
 
           <el-col v-else :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
             <div class="empty">
-              <img src="../assets/no-data.svg" width="150"/>
+              <img src="../assets/no-data.svg" width="150" />
               <div>
                 <span>No data</span>
               </div>
@@ -212,13 +212,13 @@
 
 <script>
 import moment from "moment";
-import {http} from "@/api/ApiClient";
+import { http } from "@/api/ApiClient";
 import Collection from "@/components/collection/Collection";
 import CollectionItem from "@/components/collection/CollectionItem";
 
 export default {
   name: "AppointmentView",
-  components: {CollectionItem, Collection},
+  components: { CollectionItem, Collection },
   data() {
     const now = new Date();
     const month = now.getMonth();
@@ -275,9 +275,9 @@ export default {
       this.dialogVisible = !this.dialogVisible;
     },
     verifyUser() {
-      http("post", "Verify/User", {email: this.ruleForm.email}).then(
+      http("post", "Verify/User", { email: this.ruleForm.email }).then(
         (response) => {
-          const {Success, Data} = response;
+          const { Success, Data } = response;
           if (Success) {
             this.ruleForm.id = Data.id;
             this.ruleForm.name = Data.name;
@@ -295,12 +295,12 @@ export default {
         if (valid) {
           const person =
             this.ruleForm.id !== null
-              ? {id: this.ruleForm.id}
+              ? { id: this.ruleForm.id }
               : {
-                id: this.ruleForm.id,
-                name: this.ruleForm.name,
-                email: this.ruleForm.email,
-              };
+                  id: this.ruleForm.id,
+                  name: this.ruleForm.name,
+                  email: this.ruleForm.email,
+                };
 
           const data = {
             appointmentDate: `${
@@ -317,7 +317,7 @@ export default {
               : `Schedule/Appointment/${this.id}`;
 
           http(method, baseURL, data).then((response) => {
-            const {Success, Errors, Message} = response;
+            const { Success, Errors, Message } = response;
             if (Success) {
               this.$notify({
                 title: "Success",
@@ -340,7 +340,7 @@ export default {
       });
     },
     getItem(item) {
-      const {id, appointmentDate, user} = item;
+      const { id, appointmentDate, user } = item;
       this.id = id;
       this.ruleForm.id = user.id;
       this.ruleForm.name = user.name;
@@ -352,7 +352,7 @@ export default {
     },
     removeItem(id) {
       http("delete", `Schedule/Appointment/${id}`).then((response) => {
-        const {Success} = response;
+        const { Success } = response;
 
         if (Success) {
           this.scheduleList();
@@ -362,7 +362,7 @@ export default {
     scheduleList() {
       http("get", "Schedule").then((response) => {
         console.log(response);
-        const {Success, Data} = response;
+        const { Success, Data } = response;
         if (Success) {
           this.Data = Data;
         } else {

@@ -11,8 +11,8 @@ import VCalendar from "v-calendar";
 
 Vue.config.productionTip = false;
 
-Vue.use(VCalendar, {componentPrefix: "vc"});
-Vue.use(ElementUI, {locale});
+Vue.use(VCalendar, { componentPrefix: "vc" });
+Vue.use(ElementUI, { locale });
 
 new Vue({
   router,

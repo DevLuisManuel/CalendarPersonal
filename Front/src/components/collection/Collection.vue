@@ -1,6 +1,6 @@
 <template>
   <ul class="collection">
-    <slot/>
+    <slot />
   </ul>
 </template>
 

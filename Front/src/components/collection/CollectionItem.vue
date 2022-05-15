@@ -1,6 +1,6 @@
 <template>
   <li class="collection-item">
-    <slot/>
+    <slot />
   </li>
 </template>
 
