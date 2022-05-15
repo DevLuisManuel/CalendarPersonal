@@ -1,5 +1,5 @@
 # etapa de compilación
-FROM node:10-alpine as build-stage
+FROM node:16 as build-stage
 WORKDIR /app
 COPY ./Front/package*.json ./
 RUN npm install
