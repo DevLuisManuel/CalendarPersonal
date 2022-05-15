@@ -1,9 +1,9 @@
 # etapa de compilación
 FROM node:18-alpine as build-stage
 WORKDIR /usr/share/nginx/html
-COPY package*.json ./
+COPY ./Front/package*.json ./
 RUN npm install
-COPY . .
+COPY ./Front/ .
 RUN npm run build
 
 # etapa de producción
