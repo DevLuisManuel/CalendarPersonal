@@ -2,15 +2,20 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import vuetify from "./plugins/vuetify";
-import apiClient from "@/api/ApiClient";
+
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+import locale from "element-ui/lib/locale/lang/en";
+
+import VCalendar from "v-calendar";
 
 Vue.config.productionTip = false;
+
+Vue.use(VCalendar, {componentPrefix: "vc"});
+Vue.use(ElementUI, {locale});
 
 new Vue({
   router,
   store,
-  vuetify,
-  apiClient,
   render: (h) => h(App),
 }).$mount("#app");

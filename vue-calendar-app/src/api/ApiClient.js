@@ -1,11 +1,10 @@
-import axios from "axios";
+import request from "../utils/request.js";
 
-const config = {
-  baseURL: process.env.API_URL,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-};
-
-export default axios.create(config);
+export async function http(methods, baseURL, data) {
+  const response = await request({
+    url: baseURL,
+    method: methods.toLowerCase(),
+    data,
+  });
+  return response.data;
+}
