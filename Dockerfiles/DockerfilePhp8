@@ -31,10 +31,6 @@ RUN apt-get install -y vim \
     && curl -L -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-8.phar \
     && chmod -R +x /usr/local/bin/
 
-#ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-#RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
-#    install-php-extensions http
-
 RUN echo 'memory_limit = -1' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
 RUN echo "max_execution_time=900" >> /usr/local/etc/php/conf.d/docker-php-ext-max-execution-time.ini
 COPY ./Config/php/local.ini /usr/local/etc/php/conf.d
