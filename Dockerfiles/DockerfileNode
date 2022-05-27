@@ -1,14 +1,12 @@
 # etapa de compilación
 FROM node:16-alpine as build-stage
 ARG VUE_APP_BASE_URL
-ENV URL="VUE_APP_BASE_URL=http://${VUE_APP_BASE_URL}"
+ENV URL="VUE_APP_BASE_URL=${VUE_APP_BASE_URL}"
 WORKDIR /app
 COPY ./Front/package*.json ./
 
 RUN echo $URL
-RUN echo $URL >> .env.development
 RUN echo $URL >> .env.production
-RUN echo $URL >> .env.local
 
 RUN npm install
 COPY ./Front/ .

@@ -57,7 +57,7 @@ services:
       context: .
       dockerfile: Dockerfiles/DockerfileNode
       args:
-        VUE_APP_BASE_URL: "${NGINX_URL_FRONT_CALENDAR}/api/"
+        VUE_APP_BASE_URL: "http://${NGINX_URL_FRONT_CALENDAR}/api/"
     container_name: "${PROJECT_NAME_CALENDAR}_app_node_nginx"
     restart: on-failure
     working_dir: /usr/src/app
