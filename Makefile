@@ -9,6 +9,7 @@ build:
 initial:
 	#Subiendo App y Nginx
 	@docker-compose --env-file ../enviroment/.env up -d --build
+	@make key
 
 down-all:
 	#Parar App y Nginx
@@ -47,6 +48,9 @@ endif
 migrate:
 	@docker-compose --env-file ../enviroment/.env exec app php artisan createDatabase
 	@docker-compose --env-file ../enviroment/.env exec app php artisan migrate
+
+key:
+	@docker-compose --env-file ../enviroment/.env exec app php artisan key:generate
 
 %:
     @:
