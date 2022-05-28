@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\BaseController;
-use App\Http\Resources\AppointmentResource;
-use App\Models\Calendar;
-use App\Models\User;
+use App\Http\{Controllers\BaseController, Resources\AppointmentResource};
+use App\Models\{Calendar, User};
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\{Collection, Facades\Validator};
 use Illuminate\Http\{JsonResponse, Request};
 
 class ScheduleController extends BaseController
@@ -17,7 +13,7 @@ class ScheduleController extends BaseController
     /**
      * @return JsonResponse
      */
-    public function listAppointments()
+    public function listAppointments(): JsonResponse
     {
         return $this->response(
             data: AppointmentResource::collection(Calendar::query()->orderBy('appointmentDate')->get())->jsonSerialize(),
@@ -29,7 +25,7 @@ class ScheduleController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function createAppointment(Request $request)
+    public function createAppointment(Request $request): JsonResponse
     {
         //Call Function Validator
         $valid = $this->validations($request);
@@ -66,7 +62,7 @@ class ScheduleController extends BaseController
      * @param int $id
      * @return JsonResponse
      */
-    public function readAppointment(int $id)
+    public function readAppointment(int $id): JsonResponse
     {
         $calendar = Calendar::query()->find($id);
         return ($calendar) ? $this->response(
@@ -84,7 +80,7 @@ class ScheduleController extends BaseController
      * @param int $id
      * @return JsonResponse
      */
-    public function updateAppointment(Request $request, int $id)
+    public function updateAppointment(Request $request, int $id): JsonResponse
     {
         $calendar = Calendar::query()->find($id);
         if ($calendar) {
@@ -117,7 +113,7 @@ class ScheduleController extends BaseController
      * @param $id
      * @return JsonResponse
      */
-    public function deleteAppointment($id)
+    public function deleteAppointment($id): JsonResponse
     {
         $calendar = Calendar::query()->find($id);
         if ($calendar) {
