@@ -7,11 +7,19 @@ use App\Models\{Calendar, User};
 use Carbon\Carbon;
 use Illuminate\Support\{Collection, Facades\Validator};
 use Illuminate\Http\{JsonResponse, Request};
-
+/**
+ * @OA\Tag(
+ *     name="Schedule",
+ *     description="API Endpoints of Schedule"
+ * )
+ */
 class ScheduleController extends BaseController
 {
     /**
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/projects",
+     *     @OA\Response(response="200", description="Display a listing of projects.")
+     * )
      */
     public function listAppointments(): JsonResponse
     {
