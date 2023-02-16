@@ -12,5 +12,5 @@ Route::controller(ScheduleController::class)->prefix('Schedule')->group(function
 });
 
 Route::controller(VerifyController::class)->prefix('Verify')->group(function () {
-    Route::get('/User', 'verifyUser')->name('verify-user');
+    Route::post('/User', 'verifyUser')->name('verify-user');
 });

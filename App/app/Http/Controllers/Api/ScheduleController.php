@@ -2,25 +2,29 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\BaseController;
-use App\Http\Resources\AppointmentResource;
-use App\Models\Calendar;
-use App\Models\User;
+use App\Http\{Controllers\BaseController, Resources\AppointmentResource};
+use App\Models\{Calendar, User};
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\{Collection, Facades\Validator};
 use Illuminate\Http\{JsonResponse, Request};
-
+/**
+ * @OA\Tag(
+ *     name="Schedule",
+ *     description="API Endpoints of Schedule"
+ * )
+ */
 class ScheduleController extends BaseController
 {
     /**
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/projects",
+     *     @OA\Response(response="200", description="Display a listing of projects.")
+     * )
      */
-    public function listAppointments()
+    public function listAppointments(): JsonResponse
     {
         return $this->response(
-            data: AppointmentResource::collection(Calendar::all())->jsonSerialize(),
+            data: AppointmentResource::collection(Calendar::query()->orderBy('appointmentDate')->get())->jsonSerialize(),
             message: __('Schedule/Appointment.listAppointment'),
         );
     }
@@ -29,16 +33,16 @@ class ScheduleController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function createAppointment(Request $request)
+    public function createAppointment(Request $request): JsonResponse
     {
         //Call Function Validator
         $valid = $this->validations($request);
-        if (!$valid['success']) {
+        if (!$valid['Success']) {
             return $this->response(
-                data: $valid['data'],
-                message: $valid['message'],
-                errors: $valid['errors'],
-                success: $valid['success']
+                data: $valid['Data'],
+                message: $valid['Message'],
+                errors: $valid['Errors'],
+                success: $valid['Success']
             );
         }
 
@@ -66,7 +70,7 @@ class ScheduleController extends BaseController
      * @param int $id
      * @return JsonResponse
      */
-    public function readAppointment(int $id)
+    public function readAppointment(int $id): JsonResponse
     {
         $calendar = Calendar::query()->find($id);
         return ($calendar) ? $this->response(
@@ -84,18 +88,18 @@ class ScheduleController extends BaseController
      * @param int $id
      * @return JsonResponse
      */
-    public function updateAppointment(Request $request, int $id)
+    public function updateAppointment(Request $request, int $id): JsonResponse
     {
         $calendar = Calendar::query()->find($id);
         if ($calendar) {
             //Call Function Validator
             $valid = $this->validations($request);
-            if (!$valid['success']) {
+            if (!$valid['Success']) {
                 return $this->response(
-                    data: $valid['data'],
-                    message: $valid['message'],
-                    errors: $valid['errors'],
-                    success: $valid['success']
+                    data: $valid['Data'],
+                    message: $valid['Message'],
+                    errors: $valid['Errors'],
+                    success: $valid['Success']
                 );
             }
 
@@ -117,7 +121,7 @@ class ScheduleController extends BaseController
      * @param $id
      * @return JsonResponse
      */
-    public function deleteAppointment($id)
+    public function deleteAppointment($id): JsonResponse
     {
         $calendar = Calendar::query()->find($id);
         if ($calendar) {
@@ -142,7 +146,7 @@ class ScheduleController extends BaseController
     {
         $validator = Validator::make($request->all(),
             [
-                "appointmentDate" => "required|date_format:Y-m-d H:i|after_or_equal:" . Carbon::now()->format('Y-m-d H:i'),
+                "appointmentDate" => "required|date_format:Y-m-d H:i:s|after_or_equal:" . Carbon::now()->format('Y-m-d H:i:s'),
                 "exist" => "required|boolean",
                 "person" => "array|array",
                 "person.id" => "required_if:exist,true",
@@ -155,25 +159,24 @@ class ScheduleController extends BaseController
         //We start the validation
         if ($validator->fails()) {
             return [
-                "data" => [],
-                "errors" => $validator->messages()->toArray(),
-                "message" => __('Schedule/Appointment.errors.validation'),
-                "success" => false
+                "Data" => [],
+                "Errors" => $validator->errors()->all(),
+                "Message" => __('Schedule/Appointment.errors.validation'),
+                "Success" => false
             ];
         }
-        $checkHoursWork = (new Carbon($request->get('appointmentDate')))
-            ->between(
-                Carbon::createFromFormat('H:i a', config('Work.hours')[0]),
-                Carbon::createFromFormat('H:i a', config('Work.hours')[1])
-            );
+        $work = new Carbon($request->get('appointmentDate'));
+
         //Validate Work Hour
         if (!(new Collection(config('Work.days')))->contains((new Carbon($request->get('appointmentDate')))->format('l'))
-            && !$checkHoursWork) {
+            || (($work->format("H:i") < config("Work.hours")[0]) || ($work->format("H:i") >= config("Work.hours")[1]))) {
             return [
-                "data" => [],
-                "errors" => [],
-                "message" => __('Schedule/Appointment.errors.workDay'),
-                "success" => false,
+                "Data" => [],
+                "Errors" => [
+                    __('Schedule/Appointment.errors.workDay')
+                ],
+                "Message" => __('Schedule/Appointment.errors.workDay'),
+                "Success" => false,
             ];
         }
 
@@ -187,12 +190,14 @@ class ScheduleController extends BaseController
             ->get();
         if ($calendar->count() > 0) {
             return [
-                "data" => [],
-                "errors" => [],
-                "message" => __('Schedule/Appointment.errors.appointmentDate'),
-                "success" => false,
+                "Data" => [],
+                "Errors" => [
+                    __('Schedule/Appointment.errors.workDay')
+                ],
+                "Message" => __('Schedule/Appointment.errors.appointmentDate'),
+                "Success" => false,
             ];
         }
-        return ["success" => true];
+        return ["Success" => true];
     }
 }
